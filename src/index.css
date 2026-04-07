@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
+    height: 100%;
+    overscroll-behavior: none;
+  }
+
+  body {
+    background-color: #F8F6F3;
+    color: #1A1A2E;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  .screen {
+    @apply flex flex-col min-h-screen bg-bg-app;
+  }
+
+  .card {
+    @apply bg-white rounded-card shadow-card;
+  }
+
+  .btn-primary {
+    @apply w-full h-[52px] bg-primary text-white font-semibold text-base rounded-button
+           flex items-center justify-center gap-2 active:opacity-80 transition-opacity;
+  }
+
+  .btn-secondary {
+    @apply w-full h-[52px] bg-white text-primary font-semibold text-base rounded-button
+           border border-primary flex items-center justify-center gap-2
+           active:opacity-80 transition-opacity;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-chip text-xs font-medium;
+  }
+
+  .chip-amber {
+    @apply chip bg-warning-light text-warning;
+  }
+
+  .chip-green {
+    @apply chip bg-success-light text-success;
+  }
+
+  .chip-red {
+    @apply chip bg-primary-light text-primary;
+  }
+
+  .chip-blue {
+    @apply chip bg-blue-50 text-blue-600;
+  }
+
+  .section-header {
+    @apply text-navy font-semibold text-base mb-3;
+  }
+
+  .tab-bar {
+    @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100
+           flex items-stretch safe-bottom;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .tab-item {
+    @apply flex-1 flex flex-col items-center justify-center gap-0.5 py-2
+           text-[10px] text-text-secondary transition-colors;
+  }
+
+  .tab-item.active {
+    @apply text-primary;
+  }
+
+  .progress-step {
+    @apply flex gap-3 relative;
+  }
+
+  .progress-step::before {
+    content: '';
+    @apply absolute left-3.5 top-8 bottom-0 w-0.5 bg-gray-100;
+  }
+
+  .progress-step:last-child::before {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pb-tab {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
