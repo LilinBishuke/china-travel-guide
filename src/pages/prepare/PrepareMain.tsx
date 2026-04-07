@@ -68,11 +68,13 @@ export default function PrepareMain() {
 
   // Fetch exchange rate via service
   useEffect(() => {
+    let mounted = true
     import('../../services/ratesService').then(({ getJpyCnyRate }) =>
       getJpyCnyRate().then(r => {
-        if (r) setRate({ jpy_to_cny: r.value, change: 0.001, ts: Date.now() })
+        if (mounted && r) setRate({ jpy_to_cny: r.value, change: 0.001, ts: Date.now() })
       })
     )
+    return () => { mounted = false }
   }, [])
 
   function toggleItem(id: string) {

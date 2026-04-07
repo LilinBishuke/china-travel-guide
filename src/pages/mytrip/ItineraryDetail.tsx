@@ -19,11 +19,18 @@ export default function ItineraryDetail() {
   const [editing, setEditing] = useState<{ dayIdx: number; actIdx: number } | null>(null)
   const [editText, setEditText] = useState('')
 
+  const [loadError, setLoadError] = useState(false)
+
   useEffect(() => {
     if (!id) return
+    let mounted = true
     getDB().then(db => db.get('trip-itineraries', id)).then(it => {
-      if (it) setItinerary(it)
-    }).catch(() => {})
+      if (mounted) {
+        if (it) setItinerary(it)
+        else setLoadError(true)
+      }
+    }).catch(() => { if (mounted) setLoadError(true) })
+    return () => { mounted = false }
   }, [id])
 
   async function saveActivity(dayIdx: number, actIdx: number, text: string) {
@@ -68,6 +75,15 @@ export default function ItineraryDetail() {
     navigate(-1)
   }
 
+  if (loadError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-bg-app px-6">
+        <p className="text-sm text-text-secondary mb-4">旅程が見つかりません</p>
+        <button className="btn-primary w-40" onClick={() => navigate(-1)}>戻る</button>
+      </div>
+    )
+  }
+
   if (!itinerary) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-bg-app">
@@ -110,7 +126,7 @@ export default function ItineraryDetail() {
 
               <div className="flex flex-col gap-2">
                 {day.activities.map((act, actIdx) => (
-                  <div key={actIdx} className="flex items-center gap-2">
+                  <div key={`${dayIdx}-${actIdx}`} className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
                     {editing?.dayIdx === dayIdx && editing?.actIdx === actIdx ? (
                       <div className="flex-1 flex gap-1">

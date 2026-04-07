@@ -36,7 +36,8 @@ export default function OB5Entry({ lang, onNext }: Props) {
 
   function handleNext() {
     if (!selectedPort) return
-    const port = ENTRY_PORTS.find(p => p.code === selectedPort)!
+    const port = ENTRY_PORTS.find(p => p.code === selectedPort)
+    if (!port) return
     onNext(selectedPort, port.name, date)
   }
 

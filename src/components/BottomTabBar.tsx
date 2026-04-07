@@ -80,7 +80,8 @@ export default function BottomTabBar() {
   const path = location.pathname
 
   function isTab(prefix: string) {
-    return path === prefix || path.startsWith(prefix + '/')
+    const p = path.endsWith('/') && path !== '/' ? path.slice(0, -1) : path
+    return p === prefix || p.startsWith(prefix + '/')
   }
 
   return (

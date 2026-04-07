@@ -41,9 +41,9 @@ export default function OB7SetupComplete({
   const visa = checkVisaEligibility(nationality, purpose)
   const days = departureDate ? getDaysUntilDeparture(departureDate) : null
 
-  const visaLabel = visa.result === 'visa_free_30' ? '30日ビザ免除'
-    : visa.result === 'transit_240h' ? '240h免除'
-    : visa.result === 'evisa' ? 'eVisa'
+  const visaLabel = visa?.result === 'visa_free_30' ? '30日ビザ免除'
+    : visa?.result === 'transit_240h' ? '240h免除'
+    : visa?.result === 'evisa' ? 'eVisa'
     : 'ビザ要'
 
   const purposeLabel = purpose === 'tourism' ? '観光' : purpose === 'business' ? 'ビジネス' : 'トランジット'

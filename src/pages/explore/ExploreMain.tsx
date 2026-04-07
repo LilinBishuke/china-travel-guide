@@ -101,16 +101,18 @@ export default function ExploreMain() {
         {!search.trim() && (<>
           {/* Weather strip */}
           <div className="flex gap-3 overflow-x-auto scrollbar-hide -mx-5 px-5">
-            {(weather.length > 0 ? weather : TOP_CITIES.map(c => ({ cityId: c.id, name: c.name, temp: 0, weatherCode: -1 }))).map(city => (
-              <div key={city.cityId} className="flex flex-col items-center gap-1 min-w-[56px]">
+            {TOP_CITIES.map(c => {
+              const w = weather.find(w => w.cityId === c.id)
+              return (
+              <div key={c.id} className="flex flex-col items-center gap-1 min-w-[56px]">
                 <div className="w-14 h-14 rounded-xl bg-white shadow-sm flex flex-col items-center justify-center">
-                  <span className="text-xs font-semibold text-navy">{city.name}</span>
+                  <span className="text-xs font-semibold text-navy">{c.name}</span>
                   <span className="text-[11px] text-text-secondary">
-                    {city.temp !== 0 ? `${city.temp}°` : '—'}
+                    {w && w.temp !== 0 ? `${w.temp}°` : '—'}
                   </span>
                 </div>
-              </div>
-            ))}
+              </div>)
+            })}
             <span className="text-[10px] text-text-secondary self-end whitespace-nowrap ml-1">Open-Meteo</span>
           </div>
 

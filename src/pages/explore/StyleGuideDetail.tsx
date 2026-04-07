@@ -7,7 +7,8 @@ import type { TravelStyle } from '../../store/userStore'
 export default function StyleGuideDetail() {
   const { style } = useParams<{ style: string }>()
   const navigate = useNavigate()
-  const guide = style ? getGuideByStyle(style as TravelStyle) : undefined
+  const validStyles = ['walking', 'cycling', 'motorcycle', 'driving', 'tour', 'rail']
+  const guide = style && validStyles.includes(style) ? getGuideByStyle(style as TravelStyle) : undefined
 
   if (!guide) {
     return (

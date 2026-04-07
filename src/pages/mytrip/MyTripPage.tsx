@@ -188,7 +188,7 @@ Please create a day-by-day itinerary with specific attractions, restaurants, and
           <div className="flex flex-col gap-2">
             {TEMPLATES.map(t => (
               <button
-                key={t.name}
+                key={`${t.cityId}-${t.nights}`}
                 onClick={() => createItinerary(t.name, t.cityId, t.nights)}
                 className="card flex items-center gap-3 p-3 active:opacity-70 text-left"
               >
