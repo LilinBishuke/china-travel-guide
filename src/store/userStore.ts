@@ -4,6 +4,7 @@ export type Language = 'en' | 'ja' | 'ko' | 'fr' | 'de' | 'es'
 export type TripPurpose = 'tourism' | 'business' | 'transit'
 export type TravelStyle = 'walking' | 'cycling' | 'motorcycle' | 'driving' | 'tour' | 'rail'
 export type Interest = 'culture' | 'food' | 'nature' | 'shopping' | 'entertainment' | 'wellness'
+export type VisitCount = 'first' | 'few' | 'many'
 
 export interface UserProfile {
   language: Language
@@ -15,6 +16,7 @@ export interface UserProfile {
   entryPortName: string      // e.g. "上海 浦東国際空港"
   departureDate: string      // ISO date string e.g. "2026-07-15"
   interests: Interest[]
+  visitCount: VisitCount
   onboardingComplete: boolean
 }
 
@@ -97,6 +99,22 @@ function defaultChecklist(): ChecklistItem[] {
   items.splice(1, 0, { id: 'visa', done: false })
   items.push({ id: 'style', done: false })
   return items
+}
+
+// Storage quota check — warn at 80%
+export function checkStorageQuota(): { used: number; percentage: number } {
+  let used = 0
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i)
+    if (key) used += (localStorage.getItem(key)?.length ?? 0) * 2
+  }
+  const percentage = (used / 5_242_880) * 100
+  if (percentage > 80) {
+    // Clear old caches to free space
+    const cacheKeys = ['ctg_weather_v2', 'ctg_rates_v2', 'ctg_rate_jpy']
+    cacheKeys.forEach(k => localStorage.removeItem(k))
+  }
+  return { used, percentage }
 }
 
 export function getDaysUntilDeparture(departureDate: string): number {

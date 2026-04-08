@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { saveProfile } from '../../store/userStore'
-import type { Language, TripPurpose, TravelStyle, Interest } from '../../store/userStore'
+import type { Language, TripPurpose, TravelStyle, Interest, VisitCount } from '../../store/userStore'
 
 import OB1Welcome from './OB1Welcome'
+import OB1bVisitCount from './OB1bVisitCount'
 import OB2Passport from './OB2Passport'
 import OB3Style from './OB3Style'
 import OB4VisaResult from './OB4VisaResult'
@@ -17,6 +18,7 @@ interface Props {
 
 interface Draft {
   language?: Language
+  visitCount?: VisitCount
   nationality?: string
   nationalityName?: string
   tripPurpose?: TripPurpose
@@ -52,6 +54,7 @@ export default function OnboardingFlow({ onComplete }: Props) {
       entryPortName: draft.entryPortName ?? '',
       departureDate: draft.departureDate ?? '',
       interests: draft.interests ?? [],
+      visitCount: draft.visitCount ?? 'first',
       onboardingComplete: true,
     })
     onComplete()
@@ -59,62 +62,29 @@ export default function OnboardingFlow({ onComplete }: Props) {
   }
 
   const steps = [
-    // Step 0: Welcome + Language selection
-    <OB1Welcome
-      key={0}
-      onNext={(lang) => nextStep({ language: lang })}
-    />,
+    // Step 0: Welcome + Language
+    <OB1Welcome key={0} onNext={(lang) => nextStep({ language: lang })} />,
 
-    // Step 1: Passport (nationality + purpose combined)
-    <OB2Passport
-      key={1}
-      lang={draft.language ?? 'ja'}
-      onNext={(code, name, purpose) => nextStep({ nationality: code, nationalityName: name, tripPurpose: purpose })}
-    />,
+    // Step 1: Visit count (NEW)
+    <OB1bVisitCount key={1} lang={draft.language ?? 'ja'} onNext={(count) => nextStep({ visitCount: count })} />,
 
-    // Step 2: Travel style
-    <OB3Style
-      key={2}
-      lang={draft.language ?? 'ja'}
-      onNext={(styles) => nextStep({ travelStyles: styles })}
-    />,
+    // Step 2: Passport (nationality + purpose)
+    <OB2Passport key={2} lang={draft.language ?? 'ja'} onNext={(code, name, purpose) => nextStep({ nationality: code, nationalityName: name, tripPurpose: purpose })} />,
 
-    // Step 3: Visa result
-    <OB4VisaResult
-      key={3}
-      lang={draft.language ?? 'ja'}
-      nationality={draft.nationality ?? ''}
-      nationalityName={draft.nationalityName ?? ''}
-      purpose={draft.tripPurpose ?? 'tourism'}
-      onNext={() => nextStep()}
-    />,
+    // Step 3: Travel style
+    <OB3Style key={3} lang={draft.language ?? 'ja'} onNext={(styles) => nextStep({ travelStyles: styles })} />,
 
-    // Step 4: Entry port + date
-    <OB5Entry
-      key={4}
-      lang={draft.language ?? 'ja'}
-      onNext={(port, portName, date) => nextStep({ entryPort: port, entryPortName: portName, departureDate: date })}
-    />,
+    // Step 4: Visa result
+    <OB4VisaResult key={4} lang={draft.language ?? 'ja'} nationality={draft.nationality ?? ''} nationalityName={draft.nationalityName ?? ''} purpose={draft.tripPurpose ?? 'tourism'} onNext={() => nextStep()} />,
 
-    // Step 5: Interests
-    <OB6Interests
-      key={5}
-      lang={draft.language ?? 'ja'}
-      onNext={(interests) => nextStep({ interests })}
-    />,
+    // Step 5: Entry port + date
+    <OB5Entry key={5} lang={draft.language ?? 'ja'} onNext={(port, portName, date) => nextStep({ entryPort: port, entryPortName: portName, departureDate: date })} />,
 
-    // Step 6: Setup complete
-    <OB7SetupComplete
-      key={6}
-      lang={draft.language ?? 'ja'}
-      nationality={draft.nationality ?? ''}
-      nationalityName={draft.nationalityName ?? ''}
-      purpose={draft.tripPurpose ?? 'tourism'}
-      travelStyles={draft.travelStyles ?? []}
-      interests={draft.interests ?? []}
-      departureDate={draft.departureDate ?? ''}
-      onComplete={finish}
-    />,
+    // Step 6: Interests
+    <OB6Interests key={6} lang={draft.language ?? 'ja'} onNext={(interests) => nextStep({ interests })} />,
+
+    // Step 7: Setup complete
+    <OB7SetupComplete key={7} lang={draft.language ?? 'ja'} nationality={draft.nationality ?? ''} nationalityName={draft.nationalityName ?? ''} purpose={draft.tripPurpose ?? 'tourism'} travelStyles={draft.travelStyles ?? []} interests={draft.interests ?? []} departureDate={draft.departureDate ?? ''} onComplete={finish} />,
   ]
 
   return (

@@ -88,6 +88,33 @@ export default function VisaProgressPage() {
           })}
         </div>
 
+        {/* Visa application document checklist */}
+        {currentStep <= 2 && (
+          <div className="card p-4">
+            <p className="text-sm font-bold text-navy mb-2">
+              {lang === 'ja' ? '申請に必要な書類' : 'Required Documents'}
+            </p>
+            <div className="flex flex-col gap-1.5">
+              {[
+                { ja: 'パスポート（有効期限6ヶ月以上、空白ページ2ページ以上）', en: 'Passport (6+ months validity, 2+ blank pages)' },
+                { ja: '証明写真（48mm×33mm、白背景、6ヶ月以内撮影）', en: 'Photo (48×33mm, white background, within 6 months)' },
+                { ja: '申請書の記入（consular.mfa.gov.cn/VISA/）', en: 'Application form (consular.mfa.gov.cn/VISA/)' },
+                { ja: '宿泊予約確認書', en: 'Hotel reservation confirmation' },
+                { ja: '航空券の予約確認（往復）', en: 'Flight booking confirmation (round-trip)' },
+                { ja: '大使館/領事館の予約', en: 'Embassy/consulate appointment' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                  <p className="text-xs text-navy">{lang === 'ja' ? item.ja : item.en}</p>
+                </div>
+              ))}
+              <p className="text-[10px] text-text-secondary mt-2">
+                {lang === 'ja' ? '審査期間: 通常4〜7営業日' : 'Processing: usually 4-7 business days'}
+              </p>
+            </div>
+          </div>
+        )}
+
         {currentStep >= 2 && (
           <div className="card p-4">
             <label className="text-xs font-semibold text-navy mb-2 block">

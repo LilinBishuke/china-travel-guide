@@ -4,6 +4,7 @@ import { checkVisaEligibility } from '../../data/visaRules'
 import { useState, useEffect } from 'react'
 import CountryBadge from '../../components/CountryBadge'
 import Icon from '../../components/Icon'
+import { POLICY_UPDATES } from '../../data/policyUpdates'
 
 const CHECKLIST_LABELS: Record<string, Record<string, string>> = {
   ja: {
@@ -38,6 +39,7 @@ export default function PrepareMain() {
   const isJa = lang === 'ja'
 
   const [rate, setRate] = useState<RateCache | null>(null)
+  const [timelineOpen, setTimelineOpen] = useState(false)
 
   const clLabels = CHECKLIST_LABELS[lang] ?? CHECKLIST_LABELS.en
   const days = profile.departureDate ? getDaysUntilDeparture(profile.departureDate) : null
@@ -130,6 +132,24 @@ export default function PrepareMain() {
           {isJa ? '旅の準備を始めましょう' : 'Start preparing for your trip'}
         </h1>
 
+        {/* Policy updates for repeat visitors */}
+        {profile.visitCount && profile.visitCount !== 'first' && (
+          <div className="mt-3 card p-3">
+            <p className="text-[11px] font-bold text-primary mb-2">{isJa ? '前回からの変更点' : "What's Changed"}</p>
+            {POLICY_UPDATES.filter(u => u.impact === 'high').slice(0, 3).map((u, i) => (
+              <div key={i} className="flex items-start gap-2 py-1.5 border-b border-gray-50 last:border-0">
+                <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded ${u.impact === 'high' ? 'bg-primary/10 text-primary' : 'bg-gray-100 text-text-secondary'}`}>
+                  {u.date}
+                </span>
+                <div className="flex-1">
+                  <p className="text-[11px] font-semibold text-navy">{isJa ? u.title.ja : u.title.en}</p>
+                  <p className="text-[10px] text-text-secondary">{isJa ? u.description.ja : u.description.en}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Departure countdown + info */}
         {days !== null && profile.departureDate && (
           <div className="mt-4 bg-gray-50 rounded-card p-4">
@@ -188,25 +208,47 @@ export default function PrepareMain() {
           </button>
         )}
 
-        {/* Next task highlight */}
-        {nextTask && (
-          <div className="card p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-semibold text-text-secondary">次のタスク</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-navy">{clLabels[nextTask.id] ?? nextTask.id}</span>
-              {URGENT_ITEMS.has(nextTask.id) && (
-                <span className="chip chip-red text-[9px] font-bold px-1.5 py-0.5">期限超過</span>
+        {/* "今やること" action card */}
+        {nextTask && (() => {
+          const taskRoutes: Record<string, string> = {
+            vpn: '/prepare/gfw', visa: '/prepare/visa-progress', wechat: '/prepare/payment',
+            alipay: '/prepare/payment', emergency: '/prepare/emergency',
+            onward_ticket: '/prepare/visa-progress',
+          }
+          const route = taskRoutes[nextTask.id]
+          return (
+            <button
+              onClick={() => route && navigate(route)}
+              className="card p-4 border-l-4 border-primary text-left active:opacity-70 transition-opacity"
+            >
+              <span className="text-[10px] font-semibold text-primary uppercase tracking-wide">
+                {isJa ? '今やること' : 'Do Now'}
+              </span>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-sm font-bold text-navy">{clLabels[nextTask.id] ?? nextTask.id}</span>
+                {URGENT_ITEMS.has(nextTask.id) && (
+                  <span className="chip chip-red text-[9px] font-bold px-1.5 py-0.5">{isJa ? '期限超過' : 'Overdue'}</span>
+                )}
+              </div>
+              {route && (
+                <span className="text-[10px] text-primary font-medium mt-1 inline-block">
+                  {isJa ? 'ガイドを見る →' : 'View guide →'}
+                </span>
               )}
-            </div>
-          </div>
-        )}
+            </button>
+          )
+        })()}
 
-        {/* Pre-departure Timeline */}
+        {/* Pre-departure Timeline (collapsible) */}
         {days !== null && days > 0 && (
           <div className="card p-4">
-            <p className="text-[13px] font-bold text-navy mb-3">出発前タイムライン</p>
+            <button onClick={() => setTimelineOpen(!timelineOpen)} className="flex items-center justify-between w-full text-left">
+              <p className="text-[13px] font-bold text-navy">{isJa ? '出発前タイムライン' : 'Pre-departure Timeline'}</p>
+              <svg className={`text-gray-400 transition-transform ${timelineOpen ? 'rotate-180' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            {timelineOpen && <div className="mt-3">
             <div className="flex flex-col gap-0">
               {[
                 { d: 90, label: isJa ? 'VPN設定・アプリ準備' : 'Set up VPN & apps', ids: ['vpn'] },
@@ -248,6 +290,7 @@ export default function PrepareMain() {
                 )
               })}
             </div>
+            </div>}
           </div>
         )}
 

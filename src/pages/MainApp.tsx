@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { getProfile } from '../store/userStore'
 import BottomTabBar from '../components/BottomTabBar'
 import OfflineBanner from '../components/OfflineBanner'
 
@@ -11,6 +12,12 @@ import ToolsPage from './tools/ToolsPage'
 import ProfileMain from './profile/ProfileMain'
 import EditProfile from './profile/EditProfile'
 import NotFound from './NotFound'
+
+function DefaultRedirect() {
+  const profile = getProfile()
+  const target = profile.visitCount === 'first' || !profile.visitCount ? '/prepare' : '/explore'
+  return <Navigate to={target} replace />
+}
 
 export default function MainApp() {
   // Start precache and notification check on mount
@@ -24,7 +31,7 @@ export default function MainApp() {
       <OfflineBanner />
       <main className="flex-1 overflow-hidden">
         <Routes>
-          <Route path="/" element={<Navigate to="/prepare" replace />} />
+          <Route path="/" element={<DefaultRedirect />} />
           <Route path="/prepare/*" element={<PreparePage />} />
           <Route path="/explore/*" element={<ExplorePage />} />
           <Route path="/mytrip/*" element={<MyTripRouter />} />

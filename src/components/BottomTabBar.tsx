@@ -84,8 +84,15 @@ export default function BottomTabBar() {
     return p === prefix || p.startsWith(prefix + '/')
   }
 
+  const tabPaths = ['/prepare', '/explore', '/mytrip', '/rates', '/tools']
+  function handleKeyDown(e: React.KeyboardEvent) {
+    const idx = tabPaths.findIndex(p => isTab(p))
+    if (e.key === 'ArrowRight' && idx < tabPaths.length - 1) navigate(tabPaths[idx + 1])
+    if (e.key === 'ArrowLeft' && idx > 0) navigate(tabPaths[idx - 1])
+  }
+
   return (
-    <nav className="tab-bar">
+    <nav className="tab-bar" role="tablist" aria-label="Main navigation" onKeyDown={handleKeyDown}>
       {/* Profile icon */}
       <button
         onClick={() => navigate('/profile')}
