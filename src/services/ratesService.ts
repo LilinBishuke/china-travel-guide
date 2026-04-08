@@ -35,8 +35,10 @@ export function convertToCNY(
   fromCurrency: string,
 ): number {
   const cnyPerEur = rates.rates['CNY']
-  const fromPerEur = rates.rates[fromCurrency]
-  if (!cnyPerEur || !fromPerEur) return 0
+  if (!cnyPerEur) return 0
+  // Base currency (EUR) is not included in rates — it equals 1
+  const fromPerEur = fromCurrency === rates.base ? 1 : rates.rates[fromCurrency]
+  if (!fromPerEur) return 0
   return amount * (cnyPerEur / fromPerEur)
 }
 
