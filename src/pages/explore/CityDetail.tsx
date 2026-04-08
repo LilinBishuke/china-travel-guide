@@ -2,17 +2,8 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getCityById } from '../../data/cities'
 import { getCityArticle, type CityArticle } from '../../services/wikivoyageService'
+import DOMPurify from 'dompurify'
 import Icon from '../../components/Icon'
-
-function sanitizeHTML(html: string): string {
-  const doc = new DOMParser().parseFromString(html, 'text/html')
-  doc.querySelectorAll('script,iframe,object,embed,form').forEach(el => el.remove())
-  doc.querySelectorAll('[onload],[onerror],[onclick],[onmouseover]').forEach(el => {
-    el.removeAttribute('onload'); el.removeAttribute('onerror')
-    el.removeAttribute('onclick'); el.removeAttribute('onmouseover')
-  })
-  return doc.body.innerHTML
-}
 
 export default function CityDetail() {
   const { id } = useParams<{ id: string }>()
@@ -98,7 +89,7 @@ export default function CityDetail() {
           <div className="card p-4">
             <div
               className="prose prose-sm max-w-none text-navy [&_a]:text-primary [&_h2]:text-base [&_h2]:font-bold [&_h2]:mt-4 [&_h2]:mb-2 [&_h3]:text-sm [&_h3]:font-semibold [&_ul]:pl-4 [&_li]:text-sm"
-              dangerouslySetInnerHTML={{ __html: sanitizeHTML(article.html) }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.html) }}
             />
             <p className="text-[10px] text-text-secondary mt-4 text-center">
               Source: Wikivoyage (CC BY-SA 3.0)

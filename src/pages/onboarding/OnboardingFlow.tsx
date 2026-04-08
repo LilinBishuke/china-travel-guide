@@ -42,7 +42,18 @@ export default function OnboardingFlow({ onComplete }: Props) {
   }
 
   function finish() {
-    saveProfile({ ...draft, onboardingComplete: true } as any)
+    saveProfile({
+      language: draft.language ?? 'en',
+      nationality: draft.nationality ?? '',
+      nationalityName: draft.nationalityName ?? '',
+      tripPurpose: draft.tripPurpose ?? 'tourism',
+      travelStyles: draft.travelStyles ?? [],
+      entryPort: draft.entryPort ?? '',
+      entryPortName: draft.entryPortName ?? '',
+      departureDate: draft.departureDate ?? '',
+      interests: draft.interests ?? [],
+      onboardingComplete: true,
+    })
     onComplete()
     navigate('/', { replace: true })
   }

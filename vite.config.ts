@@ -28,7 +28,7 @@ export default defineConfig({
         navigateFallback: '/index.html',
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/api\.frankfurter\.app\/.*/i,
+            urlPattern: /^https:\/\/api\.frankfurter\.dev\/.*/i,
             handler: 'NetworkFirst',
             options: { cacheName: 'exchange-rates', expiration: { maxAgeSeconds: 3600 } },
           },

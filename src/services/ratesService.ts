@@ -9,20 +9,23 @@ const CACHE_TTL = 60 * 60 * 1000 // 1 hour
 const CURRENCIES = 'CNY,JPY,USD,EUR,GBP,KRW,AUD,SGD,HKD'
 
 let cachedRates: FrankfurterResponse | null = null
+let inflight: Promise<FrankfurterResponse | null> | null = null
 
 export async function getLatestRates(): Promise<FrankfurterResponse | null> {
   if (cachedRates) return cachedRates
+  if (inflight) return inflight
 
-  const result = await apiFetch<FrankfurterResponse>(
-    `https://api.frankfurter.app/latest?to=${CURRENCIES}`,
-    { cacheKey: CACHE_KEY, cacheTTL: CACHE_TTL }
-  )
+  inflight = (async () => {
+    const result = await apiFetch<FrankfurterResponse>(
+      `https://api.frankfurter.dev/v1/latest?to=${CURRENCIES}`,
+      { cacheKey: CACHE_KEY, cacheTTL: CACHE_TTL }
+    )
+    if (result.data) cachedRates = result.data
+    inflight = null
+    return result.data
+  })()
 
-  if (result.data) {
-    cachedRates = result.data
-  }
-
-  return result.data
+  return inflight
 }
 
 // Convert amount from a given currency to CNY

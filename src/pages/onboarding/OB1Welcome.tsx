@@ -31,7 +31,7 @@ export default function OB1Welcome({ onNext }: Props) {
 
         {/* Feature pills */}
         <div className="flex gap-2 mt-2">
-          {['Safe', 'Offline', '10 languages'].map(f => (
+          {['Safe', 'Offline', '6 languages'].map(f => (
             <span key={f} className="text-[11px] font-medium text-navy bg-gray-100 px-3 py-1 rounded-full">
               {f}
             </span>
