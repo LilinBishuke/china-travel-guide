@@ -209,15 +209,15 @@ export default function PrepareMain() {
             <p className="text-[13px] font-bold text-navy mb-3">出発前タイムライン</p>
             <div className="flex flex-col gap-0">
               {[
-                { d: 90, label: 'VPN設定・アプリ準備', ids: ['vpn'] },
-                { d: 60, label: 'ビザ申請（必要な場合）', ids: ['visa'] },
-                { d: 30, label: 'WeChat / Alipay 設定', ids: ['wechat', 'alipay'] },
-                { d: 14, label: 'eSIM購入・保険加入', ids: ['esim', 'insurance'] },
-                { d: 7, label: 'オフラインマップ・両替', ids: ['offline_map', 'currency'] },
-                { d: 1, label: '最終確認・緊急連絡先保存', ids: ['emergency'] },
+                { d: 90, label: isJa ? 'VPN設定・アプリ準備' : 'Set up VPN & apps', ids: ['vpn'] },
+                { d: 60, label: isJa ? 'ビザ申請（必要な場合）' : 'Apply for visa (if needed)', ids: ['visa'] },
+                { d: 30, label: isJa ? 'WeChat / Alipay 設定' : 'Set up WeChat / Alipay', ids: ['wechat', 'alipay'] },
+                { d: 14, label: isJa ? 'eSIM購入・保険加入' : 'Get eSIM & insurance', ids: ['esim', 'insurance'] },
+                { d: 7, label: isJa ? 'オフラインマップ・両替' : 'Offline maps & currency', ids: ['offline_map', 'currency'] },
+                { d: 1, label: isJa ? '最終確認・緊急連絡先保存' : 'Final check & save contacts', ids: ['emergency'] },
               ].map((milestone, idx, arr) => {
-                const past = days <= milestone.d
-                const active = idx === 0 ? days <= milestone.d : days <= milestone.d && days > (arr[idx - 1]?.d ?? 0)
+                const past = days! <= milestone.d
+                const active = days! <= milestone.d && days! > (idx > 0 ? arr[idx - 1].d : 0)
                 const allDone = milestone.ids.every(id => items.find(i => i.id === id)?.done)
                 return (
                   <div key={milestone.d} className="flex gap-3 relative">

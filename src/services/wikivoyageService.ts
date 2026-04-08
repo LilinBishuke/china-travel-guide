@@ -55,19 +55,20 @@ export async function getCityArticle(slug: string): Promise<CityArticle | null> 
 }
 
 // Pre-fetch articles for a list of slugs (called via requestIdleCallback)
-export async function prefetchArticles(slugs: string[]): Promise<void> {
+export async function prefetchArticles(slugs: string[], signal?: AbortSignal): Promise<void> {
   for (const slug of slugs) {
+    if (signal?.aborted) return
     try {
       const db = await getDB()
       const existing = await db.get('wikivoyage-articles', slug)
       if (existing && Date.now() - existing.fetchedAt < ARTICLE_TTL) {
-        continue // already cached and fresh
+        continue
       }
     } catch {
       // continue anyway
     }
+    if (signal?.aborted) return
     await getCityArticle(slug)
-    // Small delay between fetches to be polite
     await new Promise(r => setTimeout(r, 1000))
   }
 }

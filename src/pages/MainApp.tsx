@@ -20,9 +20,9 @@ export default function MainApp() {
   }, [])
 
   return (
-    <div className="screen">
+    <div className="screen" role="application" aria-label="China Travel Guide">
       <OfflineBanner />
-      <div className="flex-1 overflow-hidden">
+      <main className="flex-1 overflow-hidden">
         <Routes>
           <Route path="/" element={<Navigate to="/prepare" replace />} />
           <Route path="/prepare/*" element={<PreparePage />} />
@@ -34,7 +34,7 @@ export default function MainApp() {
           <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </div>
+      </main>
       <BottomTabBar />
     </div>
   )
