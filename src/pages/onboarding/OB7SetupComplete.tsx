@@ -48,12 +48,18 @@ export default function OB7SetupComplete({
 
   const purposeLabel = purpose === 'tourism' ? '観光' : purpose === 'business' ? 'ビジネス' : 'トランジット'
 
+  function requestNotifications() {
+    import('../../services/notificationService').then(m => m.requestPermission())
+  }
+
   function handleSetupVPN() {
+    requestNotifications()
     onComplete()
     navigate('/prepare/gfw', { replace: true })
   }
 
   function handleGoToPrepare() {
+    requestNotifications()
     onComplete()
     navigate('/prepare', { replace: true })
   }

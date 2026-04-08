@@ -23,9 +23,12 @@ export default function RatesPage() {
 
   const lang = profile.language ?? 'en'
 
+  const [error, setError] = useState(false)
+
   useEffect(() => {
     getLatestRates().then(data => {
       setRates(data)
+      if (!data) setError(true)
       setLoading(false)
     })
   }, [])
@@ -65,6 +68,18 @@ export default function RatesPage() {
         {loading ? (
           <div className="flex justify-center py-12">
             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : error ? (
+          <div className="card p-5 text-center">
+            <p className="text-sm font-semibold text-navy mb-1">
+              {lang === 'ja' ? '為替データを取得できませんでした' : 'Unable to fetch exchange rates'}
+            </p>
+            <p className="text-xs text-text-secondary">
+              {lang === 'ja' ? 'インターネット接続を確認してください' : 'Please check your internet connection'}
+            </p>
+            <button onClick={() => { setLoading(true); setError(false); getLatestRates().then(d => { setRates(d); if (!d) setError(true); setLoading(false) }) }} className="text-xs text-primary font-semibold mt-3">
+              {lang === 'ja' ? '再試行' : 'Retry'}
+            </button>
           </div>
         ) : (
           <div className="flex flex-col gap-2">

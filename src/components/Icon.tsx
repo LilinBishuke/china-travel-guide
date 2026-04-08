@@ -6,6 +6,7 @@ interface IconProps {
   size?: number
   color?: string
   className?: string
+  label?: string  // accessible label
 }
 
 const paths: Record<string, (c: string) => JSX.Element> = {
@@ -75,7 +76,7 @@ const paths: Record<string, (c: string) => JSX.Element> = {
   panda: (c) => <><circle cx="12" cy="13" r="7" stroke={c} strokeWidth="1.5" fill="none"/><circle cx="9" cy="12" r="1.5" fill={c}/><circle cx="15" cy="12" r="1.5" fill={c}/><ellipse cx="12" cy="15" rx="2" ry="1" stroke={c} strokeWidth="1" fill="none"/><circle cx="7" cy="7" r="2.5" stroke={c} strokeWidth="1.5" fill="none"/><circle cx="17" cy="7" r="2.5" stroke={c} strokeWidth="1.5" fill="none"/></>,
 }
 
-export default function Icon({ name, size = 24, color = 'currentColor', className }: IconProps) {
+export default function Icon({ name, size = 24, color = 'currentColor', className, label }: IconProps) {
   const render = paths[name]
   if (!render) return null
   return (
@@ -85,6 +86,9 @@ export default function Icon({ name, size = 24, color = 'currentColor', classNam
       viewBox="0 0 24 24"
       fill="none"
       className={className}
+      role={label ? 'img' : 'presentation'}
+      aria-label={label}
+      aria-hidden={!label}
     >
       {render(color)}
     </svg>

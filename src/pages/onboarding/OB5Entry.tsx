@@ -8,13 +8,13 @@ interface Props {
   onNext: (port: string, portName: string, date: string) => void
 }
 
-const TITLES: Record<Language, { heading: string; sub: string; dateLabel: string; btn: string }> = {
-  ja: { heading: '入国予定', sub: '入国空港と出発日を教えてください', dateLabel: '出発日', btn: '続ける' },
-  en: { heading: 'Entry Details', sub: 'Select your entry airport and departure date', dateLabel: 'Departure Date', btn: 'Continue' },
-  ko: { heading: '입국 예정', sub: '입국 공항과 출발일을 선택하세요', dateLabel: '출발 날짜', btn: '계속' },
-  fr: { heading: "Détails d'entrée", sub: "Aéroport d'entrée et date de départ", dateLabel: 'Date de départ', btn: 'Continuer' },
-  de: { heading: 'Einreisedetails', sub: 'Einreiseflughafen und Abreisedatum', dateLabel: 'Abreisedatum', btn: 'Weiter' },
-  es: { heading: 'Detalles de entrada', sub: 'Aeropuerto de entrada y fecha de salida', dateLabel: 'Fecha de salida', btn: 'Continuar' },
+const TITLES: Record<Language, { heading: string; sub: string; dateLabel: string; btn: string; skip: string; search: string }> = {
+  ja: { heading: '入国予定', sub: '入国空港と出発日を教えてください', dateLabel: '出発日', btn: '続ける', skip: '後で設定する', search: '空港コードで検索...' },
+  en: { heading: 'Entry Details', sub: 'Select your entry airport and departure date', dateLabel: 'Departure Date', btn: 'Continue', skip: 'Set up later', search: 'Search airport...' },
+  ko: { heading: '입국 예정', sub: '입국 공항과 출발일을 선택하세요', dateLabel: '출발 날짜', btn: '계속', skip: '나중에 설정', search: '공항 검색...' },
+  fr: { heading: "Détails d'entrée", sub: "Aéroport d'entrée et date de départ", dateLabel: 'Date de départ', btn: 'Continuer', skip: 'Plus tard', search: "Chercher l'aéroport..." },
+  de: { heading: 'Einreisedetails', sub: 'Einreiseflughafen und Abreisedatum', dateLabel: 'Abreisedatum', btn: 'Weiter', skip: 'Später', search: 'Flughafen suchen...' },
+  es: { heading: 'Detalles de entrada', sub: 'Aeropuerto de entrada y fecha de salida', dateLabel: 'Fecha de salida', btn: 'Continuar', skip: 'Configurar después', search: 'Buscar aeropuerto...' },
 }
 
 function defaultDate() {
@@ -32,56 +32,39 @@ function minDate() {
 export default function OB5Entry({ lang, onNext }: Props) {
   const [selectedPort, setSelectedPort] = useState('')
   const [date, setDate] = useState(defaultDate())
+  const [search, setSearch] = useState('')
   const t = TITLES[lang] ?? TITLES.en
 
   function handleNext() {
-    if (!selectedPort) return
+    if (!selectedPort) {
+      // "Later" mode: skip with empty port
+      onNext('', '', date)
+      return
+    }
     const port = ENTRY_PORTS.find(p => p.code === selectedPort)
     if (!port) return
     onNext(selectedPort, port.name, date)
   }
 
+  const filtered = search
+    ? ENTRY_PORTS.filter(p =>
+        p.code.toLowerCase().includes(search.toLowerCase()) ||
+        p.name.includes(search) ||
+        p.city.includes(search)
+      )
+    : ENTRY_PORTS
+
   return (
     <div className="flex flex-col min-h-screen px-6 py-6">
       <StepIndicator current={5} total={7} />
 
-      <div className="mt-4 mb-5">
+      <div className="mt-4 mb-3">
         <h2 className="text-2xl font-bold text-navy">{t.heading}</h2>
         <p className="text-text-secondary text-sm mt-1">{t.sub}</p>
       </div>
 
-      <div className="flex flex-col gap-2 flex-1 overflow-y-auto">
-        {ENTRY_PORTS.map(port => (
-          <button
-            key={port.code}
-            onClick={() => setSelectedPort(port.code)}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all active:opacity-70 ${
-              selectedPort === port.code
-                ? 'border-primary bg-primary/5'
-                : 'border-transparent bg-white shadow-sm'
-            }`}
-          >
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold ${
-              selectedPort === port.code ? 'bg-primary text-white' : 'bg-gray-100 text-navy'
-            }`}>
-              {port.code}
-            </div>
-            <div className="text-left">
-              <div className="text-sm font-semibold text-navy">{port.name}</div>
-              <div className="text-xs text-text-secondary">{port.city}</div>
-            </div>
-            {selectedPort === port.code && (
-              <div className="ml-auto w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-            )}
-          </button>
-        ))}
-      </div>
-
-      <div className="mt-4 mb-3">
+      {/* Date first (more important, always visible) */}
+      <div className="mb-4">
         <label className="text-sm font-semibold text-navy mb-2 block">{t.dateLabel}</label>
         <input
           type="date"
@@ -92,12 +75,59 @@ export default function OB5Entry({ lang, onNext }: Props) {
         />
       </div>
 
-      <button
-        className={`btn-primary ${!selectedPort ? 'opacity-40 pointer-events-none' : ''}`}
-        onClick={handleNext}
-      >
-        {t.btn}
-      </button>
+      {/* Airport search */}
+      <div className="relative mb-3">
+        <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/>
+          <path d="M16.5 16.5L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+        <input
+          type="text"
+          placeholder={t.search}
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="w-full bg-white rounded-xl pl-8 pr-4 py-2.5 text-sm text-navy placeholder-gray-400 border border-gray-100 outline-none focus:border-primary"
+        />
+      </div>
+
+      {/* Compact airport list */}
+      <div className="flex flex-col gap-1.5 flex-1 overflow-y-auto max-h-[280px]">
+        {filtered.map(port => (
+          <button
+            key={port.code}
+            onClick={() => setSelectedPort(port.code)}
+            className={`flex items-center gap-2.5 px-3 py-2 rounded-lg border transition-all active:opacity-70 ${
+              selectedPort === port.code
+                ? 'border-primary bg-primary/5'
+                : 'border-gray-100 bg-white'
+            }`}
+          >
+            <span className={`text-xs font-bold w-8 ${selectedPort === port.code ? 'text-primary' : 'text-navy'}`}>
+              {port.code}
+            </span>
+            <span className="text-xs text-navy flex-1 text-left">{port.name}</span>
+            {selectedPort === port.code && (
+              <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                <path d="M2 6l3 3 5-5" stroke="#E8342A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            )}
+          </button>
+        ))}
+      </div>
+
+      <div className="flex flex-col gap-2 mt-4">
+        <button className="btn-primary" onClick={handleNext}>
+          {selectedPort ? t.btn : t.skip}
+        </button>
+        {selectedPort && (
+          <button
+            className="text-xs text-text-secondary text-center py-2 active:opacity-70"
+            onClick={() => { setSelectedPort(''); handleNext() }}
+          >
+            {t.skip}
+          </button>
+        )}
+      </div>
     </div>
   )
 }

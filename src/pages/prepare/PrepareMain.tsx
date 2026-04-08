@@ -61,7 +61,13 @@ export default function PrepareMain() {
   const doneCount = items.filter(i => i.done).length
   const progress = Math.round((doneCount / items.length) * 100)
 
-  const visaLabel = visaInfo?.result === 'visa_free_30' ? 'ビザ免除'
+  // Check if visa policy has expired
+  const visaExpired = visaInfo?.policyExpiry
+    ? new Date(visaInfo.policyExpiry) < new Date()
+    : false
+
+  const visaLabel = visaExpired ? (isJa ? '要確認（期限切れ）' : 'Verify (expired)')
+    : visaInfo?.result === 'visa_free_30' ? 'ビザ免除'
     : visaInfo?.result === 'transit_240h' ? '240h免除'
     : visaInfo?.result === 'evisa' ? 'eVisa'
     : 'ビザ要'

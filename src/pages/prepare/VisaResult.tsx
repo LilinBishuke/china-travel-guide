@@ -102,6 +102,23 @@ export default function VisaResult() {
           </div>
         )}
 
+        {/* Disclaimer */}
+        <div className="bg-gray-50 rounded-card px-4 py-3">
+          <p className="text-[11px] text-text-secondary leading-relaxed">
+            {lang === 'ja'
+              ? 'この情報は2026年4月時点のものです。ビザポリシーは予告なく変更される可能性があります。渡航前に必ず公式サイトで最新情報をご確認ください。'
+              : 'This information is as of April 2026. Visa policies may change without notice. Please verify with the official source before travel.'}
+          </p>
+          <a
+            href="https://en.nia.gov.cn/n147418/n147463/c183390/content.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] text-primary font-medium mt-1 inline-block"
+          >
+            {lang === 'ja' ? '中国国家移民管理局 公式サイト →' : 'Official NIA Website →'}
+          </a>
+        </div>
+
         {(visa.result === 'evisa' || visa.result === 'visa_required') && (
           <button
             onClick={() => navigate('/prepare/visa-progress')}
