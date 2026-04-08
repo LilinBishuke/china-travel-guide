@@ -3,7 +3,7 @@
 import { apiFetch } from '../api/client'
 import type { FrankfurterResponse } from '../api/types'
 
-const CACHE_KEY = 'ctg_rates'
+const CACHE_KEY = 'ctg_rates_v2'
 const CACHE_TTL = 60 * 60 * 1000 // 1 hour
 
 const CURRENCIES = 'CNY,JPY,USD,EUR,GBP,KRW,AUD,SGD,HKD'

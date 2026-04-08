@@ -4,7 +4,7 @@ import { apiFetch } from '../api/client'
 import type { OpenMeteoResponse } from '../api/types'
 import type { City } from '../data/cities'
 
-const CACHE_KEY = 'ctg_weather'
+const CACHE_KEY = 'ctg_weather_v2'
 const CACHE_TTL = 30 * 60 * 1000 // 30 min
 
 export interface CityWeather {
