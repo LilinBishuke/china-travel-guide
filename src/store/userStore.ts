@@ -117,6 +117,21 @@ export function checkStorageQuota(): { used: number; percentage: number } {
   return { used, percentage }
 }
 
+// Multi-tab sync: listen for storage changes from other tabs
+let onProfileChangeCallback: ((profile: Partial<UserProfile>) => void) | null = null
+
+export function onProfileChange(cb: (profile: Partial<UserProfile>) => void) {
+  onProfileChangeCallback = cb
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'ctg_profile' && e.newValue && onProfileChangeCallback) {
+      try { onProfileChangeCallback(JSON.parse(e.newValue)) } catch {}
+    }
+  })
+}
+
 export function getDaysUntilDeparture(departureDate: string): number {
   const today = new Date()
   today.setHours(0, 0, 0, 0)

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getProfile, saveProfile } from '../../store/userStore'
 import type { Language, TripPurpose } from '../../store/userStore'
 import { POPULAR_NATIONALITIES, ENTRY_PORTS } from '../../data/visaRules'
+import { changeLanguage } from '../../i18n'
 import CountryBadge from '../../components/CountryBadge'
 
 const LANGUAGES: { code: Language; label: string }[] = [
@@ -39,6 +40,7 @@ export default function EditProfile() {
       entryPortName: portObj?.name ?? existing.entryPortName ?? '',
       departureDate,
     })
+    changeLanguage(language)
     navigate(-1)
   }
 

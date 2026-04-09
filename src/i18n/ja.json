@@ -1,0 +1,77 @@
+{
+  "prepare": {
+    "title": "旅の準備を始めましょう",
+    "daysLeft": "出発まで",
+    "daysUnit": "日",
+    "progress": "準備の進捗",
+    "tasksComplete": "タスク完了",
+    "checklist": "チェックリスト",
+    "complete": "完了",
+    "doNow": "今やること",
+    "overdue": "期限超過",
+    "viewGuide": "ガイドを見る →",
+    "timeline": "出発前タイムライン",
+    "exchangeRate": "為替レート",
+    "whatsChanged": "前回からの変更点",
+    "weather": "天気",
+    "map": "地図",
+    "translate": "翻訳",
+    "reminder": "次のリマインダー",
+    "reminderVpn": "VPNの設定状況を確認してください"
+  },
+  "explore": {
+    "title": "探す",
+    "search": "都市、観光地、旅行スタイルを検索...",
+    "styleGuide": "旅行スタイル別ガイド",
+    "recommended": "おすすめ都市",
+    "viewMap": "地図を見る",
+    "noResults": "結果が見つかりません"
+  },
+  "mytrip": {
+    "title": "旅程",
+    "daysLeft": "出発まであと {{days}} 日",
+    "create": "旅程を作成",
+    "newTrip": "新しい旅程",
+    "tripName": "旅程名（例: 北京の旅）",
+    "nights": "泊数",
+    "createBtn": "作成",
+    "cancel": "キャンセル",
+    "aiPlanner": "AI旅程プランナー",
+    "aiPlannerSub": "Claude AIがあなたの旅程を提案",
+    "templates": "テンプレートから作成"
+  },
+  "rates": {
+    "title": "為替レート",
+    "amount": "変換する金額（自国通貨）",
+    "error": "為替データを取得できませんでした",
+    "errorSub": "インターネット接続を確認してください",
+    "retry": "再試行"
+  },
+  "tools": {
+    "title": "ツール",
+    "subtitle": "中国旅行に必要なツール・ガイド"
+  },
+  "profile": {
+    "title": "プロフィール",
+    "edit": "編集",
+    "visaStatus": "ビザ状況",
+    "departure": "出発日",
+    "entryPort": "入国空港",
+    "travelStyle": "旅行スタイル",
+    "interests": "興味・関心",
+    "clearCache": "キャッシュをクリア",
+    "version": "バージョン"
+  },
+  "common": {
+    "continue": "続ける",
+    "skip": "後で設定する",
+    "back": "戻る",
+    "save": "保存",
+    "traveler": "旅人さん"
+  },
+  "greeting": {
+    "morning": "おはようございます",
+    "afternoon": "こんにちは",
+    "evening": "こんばんは"
+  }
+}

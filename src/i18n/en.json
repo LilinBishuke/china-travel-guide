@@ -1,0 +1,77 @@
+{
+  "prepare": {
+    "title": "Start preparing for your trip",
+    "daysLeft": "Days until departure",
+    "daysUnit": "days",
+    "progress": "Preparation progress",
+    "tasksComplete": "tasks complete",
+    "checklist": "Checklist",
+    "complete": "complete",
+    "doNow": "Do Now",
+    "overdue": "Overdue",
+    "viewGuide": "View guide →",
+    "timeline": "Pre-departure Timeline",
+    "exchangeRate": "Exchange Rate",
+    "whatsChanged": "What's Changed",
+    "weather": "Weather",
+    "map": "Map",
+    "translate": "Translate",
+    "reminder": "Next reminder",
+    "reminderVpn": "Check your VPN setup status"
+  },
+  "explore": {
+    "title": "Explore",
+    "search": "Search cities, attractions, travel styles...",
+    "styleGuide": "Travel Style Guides",
+    "recommended": "Recommended Cities",
+    "viewMap": "View Map",
+    "noResults": "No results found"
+  },
+  "mytrip": {
+    "title": "My Trip",
+    "daysLeft": "{{days}} days until departure",
+    "create": "Create Itinerary",
+    "newTrip": "New Itinerary",
+    "tripName": "Trip name",
+    "nights": "Nights",
+    "createBtn": "Create",
+    "cancel": "Cancel",
+    "aiPlanner": "AI Trip Planner",
+    "aiPlannerSub": "Get AI-powered itinerary suggestions",
+    "templates": "From Templates"
+  },
+  "rates": {
+    "title": "Exchange Rates",
+    "amount": "Amount to convert (your currency)",
+    "error": "Unable to fetch exchange rates",
+    "errorSub": "Please check your internet connection",
+    "retry": "Retry"
+  },
+  "tools": {
+    "title": "Tools",
+    "subtitle": "Essential tools & guides for China"
+  },
+  "profile": {
+    "title": "Profile",
+    "edit": "Edit",
+    "visaStatus": "Visa Status",
+    "departure": "Departure",
+    "entryPort": "Entry Port",
+    "travelStyle": "Travel Style",
+    "interests": "Interests",
+    "clearCache": "Clear Cache",
+    "version": "Version"
+  },
+  "common": {
+    "continue": "Continue",
+    "skip": "Set up later",
+    "back": "Back",
+    "save": "Save",
+    "traveler": "Traveler"
+  },
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  }
+}

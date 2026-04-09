@@ -4,6 +4,7 @@ import { checkVisaEligibility } from '../../data/visaRules'
 import { useState, useEffect } from 'react'
 import CountryBadge from '../../components/CountryBadge'
 import Icon from '../../components/Icon'
+import { useTranslation } from 'react-i18next'
 import { POLICY_UPDATES } from '../../data/policyUpdates'
 
 const CHECKLIST_LABELS: Record<string, Record<string, string>> = {
@@ -94,18 +95,10 @@ export default function PrepareMain() {
   // First incomplete task
   const nextTask = items.find(i => !i.done)
 
-  // Greeting based on time + language
+  // Greeting via i18n
+  const { t } = useTranslation()
   const hour = new Date().getHours()
-  const greetings: Record<string, [string, string, string]> = {
-    ja: ['おはようございます', 'こんにちは', 'こんばんは'],
-    en: ['Good morning', 'Good afternoon', 'Good evening'],
-    ko: ['좋은 아침이에요', '안녕하세요', '좋은 저녁이에요'],
-    fr: ['Bonjour', 'Bon après-midi', 'Bonsoir'],
-    de: ['Guten Morgen', 'Guten Tag', 'Guten Abend'],
-    es: ['Buenos días', 'Buenas tardes', 'Buenas noches'],
-  }
-  const g = greetings[lang] ?? greetings.en
-  const greeting = hour < 12 ? g[0] : hour < 18 ? g[1] : g[2]
+  const greeting = hour < 12 ? t('greeting.morning') : hour < 18 ? t('greeting.afternoon') : t('greeting.evening')
 
   // Format departure date nicely
   function formatDate(iso: string): string {
